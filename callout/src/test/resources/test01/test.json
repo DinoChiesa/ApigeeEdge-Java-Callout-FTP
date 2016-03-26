@@ -1,0 +1,16 @@
+{
+  "description" : "basic FTP",
+  "policyConfigPath" : "config.xml",
+  "context" : {
+    "note: null values will be defaulted" : true,
+    "ftp-server" : null,
+    "ftp-user" : null,
+    "ftp-password" : null,
+    "remote-file-name" : "file-for-test01.txt",
+    "initial-directory" : "testdir",
+    "content-to-upload" : "this is the content that will be uploaded....."
+  },
+  "expected" : {
+    "success" : "true"
+  }
+}
