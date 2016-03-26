@@ -1,0 +1,16 @@
+{
+  "description" : "basic FTP - using message content",
+  "policyConfigPath" : "config.xml",
+  "messageContent" : "this is the message content. It will be uploaded as part of this callout.....",
+  "context" : {
+    "note: null values will be defaulted" : true,
+    "ftp-server" : null,
+    "ftp-user" : null,
+    "ftp-password" : null,
+    "remote-file-name" : "a-new-file.txt",
+    "initial-directory" : "testdir"
+  },
+  "expected" : {
+    "success" : "true"
+  }
+}

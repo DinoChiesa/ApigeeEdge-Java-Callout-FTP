@@ -1,0 +1,18 @@
+<JavaCallout name="Java-FtpCallout">
+  <DisplayName>Java FTP</DisplayName>
+  <Properties>
+    <Property name='debug'>true</Property>
+    <Property name='ftp-server'>{ftp-server}</Property>
+    <Property name='ftp-port'>21</Property>
+    <Property name='ftp-user'>{ftp-user}</Property>
+    <Property name='ftp-password'>{ftp-password}</Property>
+    <Property name='remote-file-name'>{remote-file-name}</Property>
+<!--
+    <Property name='source-variable'>content-to-upload</Property>
+    <Property name='want-base64-decode'>false</Property>
+-->
+    <Property name='initial-directory'>{initial-directory}</Property>
+  </Properties>
+  <ClassName>com.dinochiesa.edgecallouts.FtpPut</ClassName>
+  <ResourceURL>java://edge-custom-policy-ftp.jar</ResourceURL>
+</JavaCallout>
