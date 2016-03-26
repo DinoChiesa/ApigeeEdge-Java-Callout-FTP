@@ -1,0 +1,12 @@
+<AssignMessage name='AM-SuccessResponse'>
+  <DisplayName>AM-SuccessResponse</DisplayName>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  <Set>
+    <Payload contentType='application/json'
+             variablePrefix='%' variableSuffix='#'><![CDATA[
+%ftp_result#
+]]></Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+</AssignMessage>

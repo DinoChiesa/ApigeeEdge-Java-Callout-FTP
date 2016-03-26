@@ -1,0 +1,4 @@
+<Javascript name='JS-ApplySettings' timeLimit='200' >
+  <IncludeURL>jsc://settings.js</IncludeURL>
+  <ResourceURL>jsc://applySettings.js</ResourceURL>
+</Javascript>
