@@ -4,12 +4,12 @@
 // settings for this api proxy
 //
 // created: Mon Oct 19 17:03:54 2015
-// last saved: <2016-March-25 18:59:21>
+// last saved: <2016-March-25 19:18:19>
 
 var settings =  {
       ftp : {
-        server: "ftp.apigee.com",
-        user: "rainier",
-        password : "feof^$4#8f!*i"
+        server: "ftp.example.com",
+        user: "insert-real-user-name-here",
+        password : "insert-password-here"
       }
     };
