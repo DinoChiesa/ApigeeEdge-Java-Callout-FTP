@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="1" name="ftp-trial">
+    <ConfigurationVersion minorVersion="0" majorVersion="4"/>
+    <CreatedAt>1358216854854</CreatedAt>
+    <CreatedBy>orgAdmin</CreatedBy>
+    <Description></Description>
+    <DisplayName>ftp-trial</DisplayName>
+    <LastModifiedAt>1458958173383</LastModifiedAt>
+    <LastModifiedBy>orgAdmin</LastModifiedBy>
+    <TargetEndpoints>
+        <TargetEndpoint>ReturnIndex</TargetEndpoint>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

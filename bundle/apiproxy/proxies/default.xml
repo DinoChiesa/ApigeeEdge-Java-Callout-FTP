@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+  <Description>Default Proxy</Description>
+
+  <HTTPProxyConnection>
+    <BasePath>/ftp-trial</BasePath>
+    <Properties/>
+    <VirtualHost>default</VirtualHost>
+  </HTTPProxyConnection>
+
+  <FaultRules/>
+
+  <PreFlow>
+    <Request>
+      <Step><Name>JS-ApplySettings</Name></Step>
+    </Request>
+  </PreFlow>
+
+  <Flows>
+
+    <Flow name="upload a base64-encoded payload">
+      <Description>upload a payload which is encoded in base64</Description>
+      <Request>
+        <Step>
+          <Name>RF-BadRequest</Name>
+          <Condition>request.queryparam.remote-file-name = null</Condition>
+        </Step>
+        <Step>
+          <Name>Java-FtpPutBase64</Name>
+        </Step>
+      </Request>
+      <Response>
+        <Step>
+          <Name>AM-SuccessResponse</Name>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/upload-base64") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name="upload an unencoded payload">
+      <Description>upload a payload</Description>
+      <Request>
+        <Step>
+          <Name>RF-BadRequest</Name>
+          <Condition>request.queryparam.remote-file-name = null</Condition>
+        </Step>
+        <Step>
+          <Name>Java-FtpPut</Name>
+        </Step>
+      </Request>
+      <Response>
+        <Step>
+          <Name>AM-SuccessResponse</Name>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/upload") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name='unknown'>
+      <Description>unknown request</Description>
+      <Request>
+        <Step>
+          <Name>RF-UnknownRequest</Name>
+        </Step>
+      </Request>
+    </Flow>
+  </Flows>
+
+  <RouteRule name="Loopback"/>
+
+</ProxyEndpoint>
