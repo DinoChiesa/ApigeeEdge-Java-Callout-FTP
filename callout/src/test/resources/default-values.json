@@ -1,0 +1,5 @@
+{
+  "ftp-password" : "Secret1234!",
+  "ftp-user" : "Bob",
+  "ftp-server": "ftp.alice.com"
+}
