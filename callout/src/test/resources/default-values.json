@@ -1,5 +1,5 @@
 {
-  "ftp-password" : "feof^$4#8f!*i",
-  "ftp-user" : "rainier",
-  "ftp-server": "ftp.apigee.com"
+  "ftp-password" : "Secret1234!",
+  "ftp-user" : "Bob",
+  "ftp-server": "ftp.alice.com"
 }

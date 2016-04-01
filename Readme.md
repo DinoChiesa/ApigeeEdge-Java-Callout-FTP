@@ -11,6 +11,11 @@ This code also uses Codehaus' Jackson library for Json parsing. This one
 is included in the classpath of Apigee callouts by default, so you don't
 need to include it in the uploaded package.
 
+## License
+
+This code is licensed under the [Apache 2.0 Public License](LICENSE). 
+
+
 ## Using the Policy
 
 The policy is usable as-is, without building or compiling. All you need to do is include the appropriate Java JAR into your Apigee Edge proxy definition, and configure the policy with the appropriate settings. 
