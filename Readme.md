@@ -13,7 +13,8 @@ need to include it in the uploaded package.
 
 ## License
 
-This code is licensed under the [Apache 2.0 Public License](LICENSE). 
+This material is copyright 2015, 2016 Apigee Corporation. 
+and is licensed under the Apache 2.0 license. See the [LICENSE](LICENSE) file. 
 
 
 ## Using the Policy
