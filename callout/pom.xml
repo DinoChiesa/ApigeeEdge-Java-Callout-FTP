@@ -5,16 +5,19 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.apigee.callout</groupId>
   <artifactId>edge-custom-policy-ftp</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>EdgeCustomFtp</name>
   <url>http://maven.apache.org</url>
   <packaging>jar</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>1.7</java.version>
+    <java.version>1.8</java.version>
     <apiproxy.java.rsrc.dir>../bundle/apiproxy/resources/java</apiproxy.java.rsrc.dir>
     <testng.version>6.8.7</testng.version> <!-- current: 6.9.4 -->
+    <jackson.version>2.9.8</jackson.version>
+    <commons-net.version>3.6</commons-net.version>
+    <commons-codec.version>1.12</commons-codec.version>
     <jmockit.version>1.7</jmockit.version>
   </properties>
 
@@ -61,7 +64,7 @@ do it manually by running these commands:
     <dependency>
       <groupId>commons-net</groupId>
       <artifactId>commons-net</artifactId>
-      <version>3.3</version>
+      <version>${commons-net.version}</version>
     </dependency>
 
     <dependency>
@@ -74,22 +77,20 @@ do it manually by running these commands:
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-      <version>1.7</version>
+      <version>${commons-codec.version}</version>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-core-asl</artifactId>
-      <version>1.9.7</version>
-      <scope>compile</scope>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-asl</artifactId>
-      <version>1.9.7</version>
-      <scope>compile</scope>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
@@ -109,18 +110,19 @@ do it manually by running these commands:
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-xml</artifactId>
-      <version>2.6.4</version>
+      <version>${jackson.version}</version>
       <scope>test</scope>
     </dependency>
 
   </dependencies>
 
   <build>
-    <finalName>${project.artifactId}</finalName>
+    <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.1</version>
         <executions>
           <execution>
             <id>copy-dependencies</id>
@@ -130,6 +132,7 @@ do it manually by running these commands:
             </goals>
             <configuration>
               <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <includeScope>runtime</includeScope>
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>false</overWriteSnapshots>
               <overWriteIfNewer>true</overWriteIfNewer>
@@ -141,26 +144,18 @@ do it manually by running these commands:
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>3.8.0</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
+          <compilerArgument>-Xlint:unchecked</compilerArgument>
         </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.6</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-
+        <version>3.1.1</version>
         <configuration>
           <archive>
             <!-- do not include the pom.xml file in the generated jar -->
@@ -179,10 +174,12 @@ do it manually by running these commands:
               <tasks>
                 <copy todir="${apiproxy.java.rsrc.dir}">
                   <fileset dir="${project.build.directory}">
-                    <include name="${project.artifactId}.jar"/>
+                    <include name="${project.build.finalName}.jar"/>
                     <!-- copy any required dependencies tht are not
                     already included in the Edge runtime: -->
-                    <include name="lib/commons-net-3.3.jar"/>
+                    <include name="lib/*.jar"/>
+                    <exclude name="lib/message-flow-1.0.0.jar"/>
+                    <exclude name="lib/expressions-1.0.0.jar"/>
                     <!--                    -->
                   </fileset>
                   <mapper type="flatten"/>
@@ -191,6 +188,43 @@ do it manually by running these commands:
             </configuration>
             <goals>
               <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.0.5</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>2.7</version>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>display-dependency-updates</goal>
+              <goal>display-plugin-updates</goal>
             </goals>
           </execution>
         </executions>

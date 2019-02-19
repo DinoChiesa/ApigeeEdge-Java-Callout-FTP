@@ -1,8 +1,8 @@
 package com.dinochiesa.edgecallouts.ftputil;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import org.codehaus.jackson.map.ObjectMapper;
+import java.util.ArrayList;
 
 public class FtpCalloutResult {
     private static ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally

@@ -1,35 +1,31 @@
 package com.dinochiesa.edgecallouts.ftp.tests;
 
+import com.apigee.flow.execution.ExecutionContext;
+import com.apigee.flow.execution.ExecutionResult;
+import com.apigee.flow.message.Message;
+import com.apigee.flow.message.MessageContext;
+import com.dinochiesa.edgecallouts.FtpPut;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ArrayList;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-
 import mockit.Mock;
 import mockit.MockUp;
-
-import com.apigee.flow.execution.ExecutionContext;
-import com.apigee.flow.execution.ExecutionResult;
-import com.apigee.flow.message.MessageContext;
-import com.apigee.flow.message.Message;
-
-import com.dinochiesa.edgecallouts.FtpPut;
-
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 public class TestFtpPutCallout {
     private final static String testDataDir = "src/test/resources";
@@ -43,44 +39,45 @@ public class TestFtpPutCallout {
     public void testSetup1() {
 
         msgCtxt = new MockUp<MessageContext>() {
-            private Map variables;
-            public void $init() {
-                variables = new HashMap();
-            }
-
-            @Mock()
-            public <T> T getVariable(final String name){
-                if (variables == null) {
-                    variables = new HashMap();
+                private Map<String,Object> variables;
+                public void $init() {
+                    variables = new HashMap<String,Object>();
                 }
-                return (T) variables.get(name);
-            }
 
-            @Mock()
-            public boolean setVariable(final String name, final Object value) {
-                if (variables == null) {
-                    variables = new HashMap();
+                @Mock()
+                @SuppressWarnings("unchecked")
+                public Object getVariable(final String name){
+                    if (variables == null) {
+                        variables = new HashMap<String,Object>();
+                    }
+                    return variables.get(name);
                 }
-                variables.put(name, value);
-                return true;
-            }
 
-            @Mock()
-            public boolean removeVariable(final String name) {
-                if (variables == null) {
-                    variables = new HashMap();
+                @Mock()
+                public boolean setVariable(final String name, final Object value) {
+                    if (variables == null) {
+                        variables = new HashMap<String,Object>();
+                    }
+                    variables.put(name, value);
+                    return true;
                 }
-                if (variables.containsKey(name)) {
-                    variables.remove(name);
-                }
-                return true;
-            }
 
-            @Mock()
-            public Message getMessage() {
-                return message;
-            }
-        }.getMockInstance();
+                @Mock()
+                public boolean removeVariable(final String name) {
+                    if (variables == null) {
+                        variables = new HashMap<String,Object>();
+                    }
+                    if (variables.containsKey(name)) {
+                        variables.remove(name);
+                    }
+                    return true;
+                }
+
+                @Mock()
+                public Message getMessage() {
+                    return message;
+                }
+            }.getMockInstance();
 
         exeCtxt = new MockUp<ExecutionContext>(){ }.getMockInstance();
 
@@ -101,9 +98,7 @@ public class TestFtpPutCallout {
         // to pass just one param to the constructor, then each inner Object[] must
         // have length 1.
 
-        ObjectMapper om = new ObjectMapper();
-        om.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
+        ObjectMapper om = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         // Path currentRelativePath = Paths.get("");
         // String s = currentRelativePath.toAbsolutePath().toString();
@@ -117,7 +112,8 @@ public class TestFtpPutCallout {
 
         File defaultsFile = new File(testDataDir, "default-values.json");
         Map<String,String> defaults = (defaultsFile.exists() && defaultsFile.isFile()) ?
-            om.readValue(defaultsFile, HashMap.class) : new HashMap<String,String>();
+            om.readValue(defaultsFile, new TypeReference<Map<String,String>>() {}) :
+            new HashMap<String,String>();
 
         File[] files = testDir.listFiles();
         ArrayList<TestCase> list = new ArrayList<TestCase>();
@@ -146,11 +142,11 @@ public class TestFtpPutCallout {
             }
         }
 
-        // OMG!!  Seriously? Is this the easiest way to generate a 2-d array?
         int n = list.size();
         if (n == 0) {
             throw new IllegalStateException("no tests found.");
         }
+        // This seems to be the easiest way to generate a 2-d array?
         Object[][] data = new Object[n][];
         for (int i = 0; i < data.length; i++) {
             data[i] = new Object[]{ list.get(i) };

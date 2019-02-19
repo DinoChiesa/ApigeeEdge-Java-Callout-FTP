@@ -12,5 +12,5 @@
     <Property name='want-base64-decode'>false</Property>
   </Properties>
   <ClassName>com.dinochiesa.edgecallouts.FtpPut</ClassName>
-  <ResourceURL>java://edge-custom-policy-ftp.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-policy-ftp-1.0.1.jar</ResourceURL>
 </JavaCallout>
